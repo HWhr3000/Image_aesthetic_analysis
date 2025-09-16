@@ -1,0 +1,226 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Aesthetics Evaluation Result",
+  "type": "object",
+  "required": [
+    "image_file",
+    "metrics",
+    "compliance",
+    "provenance"
+  ],
+  "properties": {
+    "image_file": {
+      "type": "string"
+    },
+    "width": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "height": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "aspect_ratio": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "metrics": {
+      "type": "object",
+      "properties": {
+        "rms_contrast": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "lightness_entropy": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "complexity": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "edge_density": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "mean_L": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "mean_a": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "mean_b": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "color_entropy": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "mirror_symmetry": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "balance": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "fourier_slope": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "eoe_1st": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "eoe_2nd": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "ssim": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "lpips": {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "rms_contrast",
+        "edge_density",
+        "mean_L",
+        "mean_a",
+        "mean_b",
+        "color_entropy",
+        "mirror_symmetry",
+        "balance",
+        "fourier_slope"
+      ]
+    },
+    "compliance": {
+      "type": "object",
+      "properties": {
+        "lab_ok": {
+          "type": "boolean"
+        },
+        "rms_ok": {
+          "type": "boolean"
+        },
+        "edge_ok": {
+          "type": "boolean"
+        },
+        "eoe_ok": {
+          "type": "boolean"
+        },
+        "color_entropy_ok": {
+          "type": "boolean"
+        },
+        "fourier_ok": {
+          "type": "boolean"
+        },
+        "symmetry_ok": {
+          "type": "boolean"
+        },
+        "balance_ok": {
+          "type": "boolean"
+        },
+        "compliance_pct": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "lab_ok",
+        "rms_ok",
+        "edge_ok",
+        "eoe_ok",
+        "color_entropy_ok",
+        "fourier_ok",
+        "symmetry_ok",
+        "balance_ok",
+        "compliance_pct"
+      ]
+    },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "toolbox_repo": {
+          "type": "string"
+        },
+        "toolbox_commit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "toolbox_script": {
+          "type": "string"
+        },
+        "weights": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "sha256": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "path",
+              "sha256"
+            ]
+          }
+        },
+        "run_at": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "toolbox_repo",
+        "toolbox_script",
+        "run_at"
+      ]
+    }
+  }
+}

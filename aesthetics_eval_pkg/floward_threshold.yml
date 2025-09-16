@@ -1,0 +1,36 @@
+# Floward photography guideline thresholds
+
+image_size:
+  width: 1000
+  height: 1000
+
+object_coverage:
+  min_ratio: 0.70   # 70%
+  max_ratio: 0.80   # 80%
+
+podium_ratio:
+  min_ratio: 0.70
+  max_ratio: 0.80
+
+brightness:
+  min_L: 85
+  max_L: 92
+  warm_hue_min: 20   # approximate HSV hue for warm tones
+  warm_hue_max: 50
+
+background_color:
+  reference: [240, 235, 225]   # ivory RGB reference
+  tolerance: 20                # distance tolerance
+
+sharpness:
+  min_laplace_var: 100.0
+
+contrast:
+  min_std: 20.0
+  max_std: 80.0
+
+ssim:
+  target: 0.90
+
+lpips:
+  max: 0.20

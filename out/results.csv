@@ -1,0 +1,4 @@
+image_file,width,height,aspect_ratio,rms_contrast,lightness_entropy,complexity,edge_density,mean_L,mean_a,mean_b,color_entropy,mirror_symmetry,balance,fourier_slope,eoe_1st,eoe_2nd,ssim,lpips,lab_ok,rms_ok,edge_ok,eoe_ok,color_entropy_ok,fourier_ok,symmetry_ok,balance_ok,compliance_pct,img_file
+19666_544786.jpg,2000,,1.0,19.677,,3.664,48.917,66.504,4.925,12.815,3.534,13.019,15.689,,4.066,0.0008869,,,True,True,True,True,True,False,False,True,75.0,19666_544786.jpg
+19666_544789.jpg,2000,,1.0,20.565,,4.423,63.45,66.209,4.681,13.092,3.855,16.169,13.845,,4.469,0.0006793,,,True,True,True,True,True,False,False,True,75.0,19666_544789.jpg
+21698_304727.jpg,1105,,1.376,13.829,,2.391,43.936,90.282,-7.274,-9.307,2.78,29.02,34.931,,4.2,0.001028,,,False,False,False,True,False,False,False,False,12.5,21698_304727.jpg

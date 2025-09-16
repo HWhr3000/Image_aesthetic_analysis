@@ -1,0 +1,15 @@
+{
+  "created_at": "2025-09-09 11:02:20",
+  "toolbox_provenance": {
+    "toolbox_repo": "/mnt/c/Users/rahar/Documents/Aesthetics-Toolbox",
+    "toolbox_commit": "005e03656115ed907365798e65bb87ffaed8e695",
+    "toolbox_script": "QIP_machine_script.py",
+    "weights": [],
+    "run_at": "2025-09-09T04:02:19.720551Z"
+  },
+  "thresholds_path": "/mnt/c/Users/rahar/OneDrive - Heriot-Watt University/F21M/Code/Backbone_Aesthetic_toolbox/aesthetics_eval_pkg/thresholds.yml",
+  "thresholds_sha256": "6cbd1d7c1a1b24a36523d021288cc7d8deb37f031c907aca3a3f4f6cfddf7f6e",
+  "toolbox_csv": "/mnt/c/Users/rahar/Documents/Aesthetics-Toolbox/out/results.csv",
+  "toolbox_csv_sha256": "b0fe9790934e6d977776e108728b7f07f76ee47d0c23485244836a2a79388424",
+  "package_version": "0.1.0"
+}

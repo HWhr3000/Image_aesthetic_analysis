@@ -1,0 +1,2 @@
+[console_scripts]
+aesthetics-eval = aesthetics_eval.cli:main

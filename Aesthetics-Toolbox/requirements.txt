@@ -1,0 +1,8 @@
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+streamlit==1.34.0
+numpy
+Pillow
+scikit-image
+scipy
+statsmodels

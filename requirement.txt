@@ -1,0 +1,31 @@
+
+numpy==1.26.4
+opencv-python-headless==4.10.0.84
+scikit-image==0.22.0
+pandas==2.2.2
+tqdm==4.66.2
+lpips==0.1.4
+torch==2.2.2   # pick wheel matching your CUDA version (cu121 if WSL+4090)
+torchvision==0.17.2
+statsmodels==0.14.2
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+streamlit==1.34.0
+
+# Core scientific stack (pinned to last 1.x releases, avoids numpy 2.x issues)
+scipy==1.13.1
+scikit-learn==1.5.1
+
+# Toolbox-specific deps
+Pillow==10.3.0
+
+# Config / JSON / logging
+PyYAML==6.0.2
+jsonschema==4.23.0
+loguru==0.7.2
+click==8.1.7
+
+# Background jobs
+celery==5.3.6
+redis==4.6.0
+matplotlib==3.9.1
