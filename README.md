@@ -14,18 +14,7 @@ This repository implements a feature extraction and evaluation pipeline for imag
 6. **Run all script:** All steps are orchestrated by run_all.py.
 
 ## 3. Repository Layout
-Image_aesthetic_eval/
-├── run_all.py # Orchestrator (single entrypoint)
-├── Aesthetics-Toolbox/
-│ └── QIP_machine_script.py # Toolbox script for QIPs
-├── aesthetics_eval_pkg/
-│ ├── aesthetics_eval/
-│ │ ├── postprocess.py # Threshold mapping + JSONL export
-│ │ └── thresholds.yml # Metric thresholds
-├── floward_eval.py # Floward-specific checks
-├── similarity_eval.py # SSIM/LPIPS evaluation
-├── select_model.py # Aggregate scores and rank models
-└── out/ # Outputs (CSV, JSONL, Excel, etc.)
+Image_aesthetic_eval/ ├── run_all.py # Orchestrator (single entrypoint) ├── Aesthetics-Toolbox/ │ └── QIP_machine_script.py # Toolbox script for QIPs ├── aesthetics_eval_pkg/ │ ├── aesthetics_eval/ │ │ ├── postprocess.py # Threshold mapping + JSONL export │ │ └── thresholds.yml # Metric thresholds ├── floward_eval.py # Floward-specific checks ├── similarity_eval.py # SSIM/LPIPS evaluation ├── select_model.py # Aggregate scores and rank models └── out/ # Outputs (CSV, JSONL, Excel, etc.)
 
 ## 4. Commands
 
@@ -63,16 +52,16 @@ python select_model.py \
 
 ## 5. Data Flow & Outputs
 ### 5.1 Toolbox (QIPs)
-Computed metrics include:
-  Color/Intensity: Mean & std (RGB/Lab/HSV), luminance entropy, color entropy
-  Contrast: RMS contrast
-  Edges: Edge density, 1st/2nd order EOE
-  Fourier: Slopes (Redies/Spehar/Mather), sigma
-  Fractal Dimensions: 2D, 3D
-  Symmetry & Balance: CNN symmetry, mirror symmetry, DCM, balance
-  Self-Similarity: PHOG, CNN-based
-  Texture: Anisotropy, homogeneity, sparseness, variability
-  Output: results.csv with one row per image + error column if QIPs failed.
+** Computed metrics include ** :
+  -- Color/Intensity: Mean & std (RGB/Lab/HSV), luminance entropy, color entropy
+  -- Contrast: RMS contrast
+  -- Edges: Edge density, 1st/2nd order EOE
+  -- Fourier: Slopes (Redies/Spehar/Mather), sigma
+  -- Fractal Dimensions: 2D, 3D
+  -- Symmetry & Balance: CNN symmetry, mirror symmetry, DCM, balance
+  -- Self-Similarity: PHOG, CNN-based
+  -- Texture: Anisotropy, homogeneity, sparseness, variability
+** Output **: results.csv with one row per image + error column if QIPs failed.
 
 ### 5.2 Postprocess (Threshold Mapping)
 Uses thresholds.yml for pass/fail mapping.
