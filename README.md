@@ -1,3 +1,10 @@
+# Image Aesthetics Evaluation Pipeline
+
+## 1. Overview
+
+This repository implements a feature extraction and evaluation pipeline for image quality and aesthetics, extended with Floward-specific photography guidelines and optional enhancement model selection. The system is designed to run as simple Python scripts (no Docker/Kubernetes) and produces results in CSV, JSONL, and Excel formats.
+
+
 1\) Introduction
 
 You have a lightweight, script-first pipeline (no Docker, no web server) that:
