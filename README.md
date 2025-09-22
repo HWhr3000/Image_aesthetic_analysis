@@ -15,7 +15,7 @@ This repository implements a feature extraction and evaluation pipeline for imag
 
 ## 3. Repository Layout
 Image_aesthetic_eval/
- .
+.
  ├─ run_all.py                     # Orchestrator (single entrypoint)
  ├─ Aesthetics-Toolbox/
  │  └─ QIP_machine_script.py       # Toolbox script for QIPs
