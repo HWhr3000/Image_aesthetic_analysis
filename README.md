@@ -15,28 +15,19 @@ This repository implements a feature extraction and evaluation pipeline for imag
 
 ## 3. Repository Layout
 Image_aesthetic_eval/
- 
+ .
  ├─ run_all.py                     # Orchestrator (single entrypoint)
- 
  ├─ Aesthetics-Toolbox/
- 
  │  └─ QIP_machine_script.py       # Toolbox script for QIPs
- 
  ├─ aesthetics_eval_pkg/
- 
  │  ├─ aesthetics_eval/
- 
  │  │  ├─ postprocess.py           # Threshold mapping + JSONL export
- 
  │  │  └─ thresholds.yml           # Metric thresholds
- 
  ├─ floward_eval.py                # Floward-specific checks
- 
  ├─ similarity_eval.py             # SSIM/LPIPS evaluation
- 
  ├─ select_model.py                # Aggregate scores and rank models
- 
  └─ out/                           # Outputs (CSV, JSONL, Excel, etc.)
+
 
 
 ## 4. Commands
