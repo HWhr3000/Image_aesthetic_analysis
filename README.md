@@ -90,7 +90,7 @@ Outputs:
 -   run_meta.json (toolbox commit, weights hash)
 
 ### 5.3 Floward Evaluation
-** Checks applied per image: ** 
+**Checks applied per image:** 
 -   Background Ivory: LAB mean in ivory band, shadows excluded
 -   Object Coverage: ~75% ± 10%
 -   Podium/Object Ratio: ~75% of podium width
@@ -102,7 +102,7 @@ Outputs:
 Outputs: results_floward.csv + evaluation.xlsx.
 
 ### 5.4 Similarity Evaluation
-- For each original vs enhanced pair:
+**For each original vs enhanced pair:**
 -   SSIM: (≥0.90 target)
 -   LPIPS: (≤0.20 target, pretrained VGG)
 -   Output: similarity_scores.csv.
@@ -128,18 +128,18 @@ Outputs: results_floward.csv + evaluation.xlsx.
 -   Ablation/failure modes (podium detector failing, shadow removal effect)
 
 ## 8. Future Extensions
--   Classifier for lifestyle/model images (to relax strict checks)
+Classifier for lifestyle/model images (to relax strict checks)
 -   Policy per image type (close-up vs cover vs normal) in floward_eval.py
 -   GPU acceleration for LPIPS
 -   Auto-report generator (model_selection.pdf)
 -   Model Run Steps
 -   Activating Environment
--     deactivate 2>/dev/null || true
--     python3 -m venv .venv
--     source .venv/bin/activate
--     which python # should end in .../aesthetics_eval_pkg/.venv/bin/python
--     pip install --upgrade pip
--     pip install -r requirement.txt
+--     deactivate 2>/dev/null || true
+--     python3 -m venv .venv
+--     source .venv/bin/activate
+--     which python # should end in .../aesthetics_eval_pkg/.venv/bin/python
+--     pip install --upgrade pip
+--     pip install -r requirement.txt
     # --source .imenv/bin/activate
 -   Install in editable mode
 -     pip install -e .
