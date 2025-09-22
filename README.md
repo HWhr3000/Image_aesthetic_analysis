@@ -77,17 +77,12 @@ python select_model.py \
 -   Output: results.csv with one row per image + error column if QIPs failed.
 
 ### 5.2 Postprocess (Threshold Mapping)
-- Uses thresholds.yml for pass/fail mapping.
+ Uses thresholds.yml for pass/fail mapping.
 
-- Example YAML schema:
--   RMS:
--     range: [20, 25]
--   EdgeDensity:
--     min: 500
--   Lab:
--     L: [88, 92]
--     a: [-1, 3]
--     b: [8, 12]
+ Example YAML schema:
+-   RMS: range: [20, 25]
+-   EdgeDensity: min: 500
+-   Lab: L: [88, 92] , a: [-1, 3] & b: [8, 12]
 
 Outputs:
 -   results_raw.csv (flags + normalized values)
@@ -95,7 +90,7 @@ Outputs:
 -   run_meta.json (toolbox commit, weights hash)
 
 ### 5.3 Floward Evaluation
-- Checks applied per image:
+** Checks applied per image: ** 
 -   Background Ivory: LAB mean in ivory band, shadows excluded
 -   Object Coverage: ~75% ± 10%
 -   Podium/Object Ratio: ~75% of podium width
