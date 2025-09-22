@@ -29,19 +29,6 @@ Image_aesthetic_eval/
 - ├─ select_model.py                # Aggregate scores and rank models
 - └─ out/                           # Outputs (CSV, JSONL, Excel, etc.)
 
- -- ├── Aesthetics-Toolbox/    
- -- │└── QIP_machine_script.py
- -- ├── aesthetics_eval_pkg/
- -- │   └── aesthetics_eval/ 
- -- │       ├── __init__.py       
- -- │   ├── postprocess.py
- -- │       └── thresholds.yml 
- -- ├── floward_eval.py 
- -- ├── out/ 
- -- ├── run_all.py
- -- ├── select_model.py
- -- └── similarity_eval.py
-
 ## 4. Commands
 
 ### 4.1 Full Run
