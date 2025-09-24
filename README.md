@@ -76,6 +76,10 @@ python select_model.py \
 -   Texture: Anisotropy, homogeneity, sparseness, variability
 -   Output: results.csv with one row per image + error column if QIPs failed.
 
+QIP Working:
+
+![alt text](https://github.com/HWhr3000/Image_aesthetic_analysis/blob/main/QIP_calculated.png)
+
 ### 5.2 Postprocess (Threshold Mapping)
  Uses thresholds.yml for pass/fail mapping.
 
