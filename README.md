@@ -1,4 +1,4 @@
-# Image Aesthetics Evaluation Pipeline
+**Aesthetic Toolbox and Image Evaluation**
 
 ## 1. Overview
 
@@ -12,22 +12,24 @@ This repository implements a feature extraction and evaluation pipeline for imag
 4. **Similarity Metrics (optional):** Compares original and enhanced images using SSIM and LPIPS.
 5. **Model Selection (optional):** Combines compliance and similarity scores to rank models.
 6. **Run all script:** All steps are orchestrated by run_all.py.
+7. **run_all.py**: The main entry point for the evaluation process.
+8. **aesthetic_toolbox/**: A directory containing utility functions and classes for calculating aesthetic metrics.
+9. **floward_eval.py**: A script for evaluating images using the aesthetic toolbox.
 
 ## 3. Repository Layout
 Image_aesthetic_eval/
+ ├─ run_all.py                     # Orchestrator (single entrypoint)
+ ├─ Aesthetics-Toolbox/            # This is the download from https://github.com/RBartho/Aesthetics-Toolbox
+ │  └─ QIP_machine_script.py       # Toolbox script for QIPs
+ ├─ aesthetics_eval_pkg/           # custom package that has the evaluation package and the threshold evaluated 
+ │  ├─ aesthetics_eval/
+ │  │  ├─ postprocess.py           # Threshold mapping + JSONL export
+ │  │  └─ floward_eval.py          # Floward-specific checks
+ │  │  └─ thresholds.yml           # Metric thresholds
+ ├─ Image_auto_scoring/            # contains python script to run different ollama hosted llm models 
+ │  │  ├─ evaluate_images_ollama_full.py          # Script that runs with different parameters for running different llm model and saving output in out folder 
+ └─ out/                           # Outputs (CSV, JSONL, Excel, etc.)
 
-
-- ├─ run_all.py                     # Orchestrator (single entrypoint)
-- ├─ Aesthetics-Toolbox/
-- │  └─ QIP_machine_script.py       # Toolbox script for QIPs
-- ├─ aesthetics_eval_pkg/
-- │  ├─ aesthetics_eval/
-- │  │  ├─ postprocess.py           # Threshold mapping + JSONL export
-- │  │  └─ thresholds.yml           # Metric thresholds
-- ├─ floward_eval.py                # Floward-specific checks
-- ├─ similarity_eval.py             # SSIM/LPIPS evaluation
-- ├─ select_model.py                # Aggregate scores and rank models
-- └─ out/                           # Outputs (CSV, JSONL, Excel, etc.)
 
 ## 4. Commands
 
@@ -76,17 +78,18 @@ python select_model.py \
 -   Texture: Anisotropy, homogeneity, sparseness, variability
 -   Output: results.csv with one row per image + error column if QIPs failed.
 
-QIP Working:
-
-![alt text](https://github.com/HWhr3000/Image_aesthetic_analysis/blob/main/QIP_calculated.png)
-
 ### 5.2 Postprocess (Threshold Mapping)
- Uses thresholds.yml for pass/fail mapping.
+- Uses thresholds.yml for pass/fail mapping.
 
- Example YAML schema:
--   RMS: range: [20, 25]
--   EdgeDensity: min: 500
--   Lab: L: [88, 92] , a: [-1, 3] & b: [8, 12]
+- Example YAML schema:
+-   RMS:
+-     range: [20, 25]
+-   EdgeDensity:
+-     min: 500
+-   Lab:
+-     L: [88, 92]
+-     a: [-1, 3]
+-     b: [8, 12]
 
 Outputs:
 -   results_raw.csv (flags + normalized values)
@@ -94,7 +97,7 @@ Outputs:
 -   run_meta.json (toolbox commit, weights hash)
 
 ### 5.3 Floward Evaluation
-**Checks applied per image:** 
+- Checks applied per image:
 -   Background Ivory: LAB mean in ivory band, shadows excluded
 -   Object Coverage: ~75% ± 10%
 -   Podium/Object Ratio: ~75% of podium width
@@ -106,7 +109,7 @@ Outputs:
 Outputs: results_floward.csv + evaluation.xlsx.
 
 ### 5.4 Similarity Evaluation
-**For each original vs enhanced pair:**
+- For each original vs enhanced pair:
 -   SSIM: (≥0.90 target)
 -   LPIPS: (≤0.20 target, pretrained VGG)
 -   Output: similarity_scores.csv.
@@ -132,18 +135,18 @@ Outputs: results_floward.csv + evaluation.xlsx.
 -   Ablation/failure modes (podium detector failing, shadow removal effect)
 
 ## 8. Future Extensions
-Classifier for lifestyle/model images (to relax strict checks)
+-   Classifier for lifestyle/model images (to relax strict checks)
 -   Policy per image type (close-up vs cover vs normal) in floward_eval.py
 -   GPU acceleration for LPIPS
 -   Auto-report generator (model_selection.pdf)
 -   Model Run Steps
 -   Activating Environment
---     deactivate 2>/dev/null || true
---     python3 -m venv .venv
---     source .venv/bin/activate
---     which python # should end in .../aesthetics_eval_pkg/.venv/bin/python
---     pip install --upgrade pip
---     pip install -r requirement.txt
+-     deactivate 2>/dev/null || true
+-     python3 -m venv .venv
+-     source .venv/bin/activate
+-     which python # should end in .../aesthetics_eval_pkg/.venv/bin/python
+-     pip install --upgrade pip
+-     pip install -r requirement.txt
     # --source .imenv/bin/activate
 -   Install in editable mode
 -     pip install -e .
@@ -203,3 +206,76 @@ Classifier for lifestyle/model images (to relax strict checks)
 
    --My Env run
 python run_all.py    --images-dir "/mnt/c/Users/rahar/Documents/Sample_image"  --toolbox-repo "/mnt/c/Users/rahar/OneDrive - Heriot-Watt University/F21M/Code/Final Code/Image_aesthetic_eval/Aesthetics-Toolbox"   --out-dir "/mnt/c/Users/rahar/OneDrive - Heriot-Watt University/F21M/Code/Final Code/Image_aesthetic_eval/out"   --thresholds "/mnt/c/Users/rahar/OneDrive - Heriot-Watt University/F21M/Code/Final Code/Image_aesthetic_eval/aesthetics_eval_pkg/thresholds.yml"  --floward-excel "/mnt/c/Users/rahar/OneDrive - Heriot-Watt University/F21M/Code/Final Code/Image_aesthetic_eval/out/evaluation.xlsx"
+
+--demo
+python run_all.py    --images-dir "/mnt/c/Users/rahar/Documents/Image_demo"  --toolbox-repo "/mnt/c/Users/rahar/OneDrive - Heriot-Watt University/F21M/Code/Final Code/Image_aesthetic_eval/Aesthetics-Toolbox"   --out-dir "/mnt/c/Users/rahar/OneDrive - Heriot-Watt University/F21M/Code/Final Code/Image_aesthetic_eval/out"   --thresholds "/mnt/c/Users/rahar/OneDrive - Heriot-Watt University/F21M/Code/Final Code/Image_aesthetic_eval/aesthetics_eval_pkg/thresholds.yml"  --floward-excel "/mnt/c/Users/rahar/OneDrive - Heriot-Watt University/F21M/Code/Final Code/Image_aesthetic_eval/out/evaluation.xlsx"
+
+
+python evaluate_images_ollama_full.py --model qwen2.5vl:7b --input_folder "C:\Users\rahar\Documents\Sample_image" --output_folder "C:\Users\rahar\OneDrive - Heriot-Watt University\F21M\Code\Final Code\Image_aesthetic_eval\Image_auto_scoring\out" --thresholds ./thresholds.yml
+
+cd "C:\Users\rahar\OneDrive - Heriot-Watt University\F21M\Code\Final Code\Image_aesthetic_eval\Image_auto_scoring" 
+python evaluate_images_ollama_full.py --model qwen2.5vl-7b-gpu:latest --input_folder "C:\Users\rahar\Documents\Sample_image" --output_folder "C:\Users\rahar\OneDrive - Heriot-Watt University\F21M\Code\Final Code\Image_aesthetic_eval\Image_auto_scoring\out" --thresholds "C:\Users\rahar\OneDrive - Heriot-Watt University\F21M\Code\Final Code\Image_aesthetic_eval\Image_auto_scoring\thresholds.yml"
+
+python evaluate_images_ollama_full.py --model llama3.2-vision:latest --input_folder "C:\Users\rahar\Documents\Sample_image" --output_folder "C:\Users\rahar\OneDrive - Heriot-Watt University\F21M\Code\Final Code\Image_aesthetic_eval\Image_auto_scoring\out" --thresholds "C:\Users\rahar\OneDrive - Heriot-Watt University\F21M\Code\Final Code\Image_aesthetic_eval\Image_auto_scoring\thresholds.yml"
+ 
+
+python evaluate_images_ollama_full.py --model childof7sins/llava-llama3-f16:latest  --input_folder "C:\Users\rahar\Documents\Sample_image" --output_folder "C:\Users\rahar\OneDrive - Heriot-Watt University\F21M\Code\Final Code\Image_aesthetic_eval\Image_auto_scoring\out" --thresholds "C:\Users\rahar\OneDrive - Heriot-Watt University\F21M\Code\Final Code\Image_aesthetic_eval\Image_auto_scoring\thresholds.yml"
+
+ --output_folder, --thresholds
+
+
+
+
+## Detailed Code Structure
+
+### `run_all.py`
+
+This script is the main entry point for the evaluation process. It takes the following command-line arguments:
+
+* `input_image`: The path to the input image.
+* `output_dir`: The directory where the output files will be stored.
+
+The script calls `aesthetic_toolbox/evaluate.py` to perform the evaluation.
+
+### `aesthetic_toolbox/evaluate.py`
+
+This module contains the logic for evaluating images. It uses utility functions from `aesthetic_toolbox/utils.py` to calculate aesthetic metrics.
+
+### `aesthetic_toolbox/utils.py`
+
+This module provides utility functions for calculating aesthetic metrics. It contains the following functions:
+
+* `calculate_color_metrics()`: Calculates color-related metrics.
+* `calculate_texture_metrics()`: Calculates texture-related metrics.
+* `calculate_spatial_metrics()`: Calculates spatial-related metrics.
+
+### `floward_eval.py`
+
+This script is used to evaluate images using the aesthetic toolbox.
+
+## Detailed Outline of Parameter Calculation
+
+The following parameters are calculated:
+
+* `colorfulness`: A measure of the colorfulness of an image.
+* `contrast`: A measure of the contrast of an image.
+* `sharpness`: A measure of the sharpness of an image.
+* `entropy`: A measure of the entropy of an image.
+
+### Color Metrics
+
+The color metrics are calculated using the following functions:
+
+* `calculate_color_metrics()`: Calculates the color metrics using the `aesthetic_toolbox/utils.py` module.
+
+### Texture Metrics
+
+The texture metrics are calculated using the following functions:
+
+* `calculate_texture_metrics()`: Calculates the texture metrics using the `aesthetic_toolbox/utils.py` module.
+
+### Spatial Metrics
+
+The spatial metrics are calculated using the following functions:
+
+* `calculate_spatial_metrics()`: Calculates the spatial metrics using the `aesthetic_toolbox/utils.py` module.

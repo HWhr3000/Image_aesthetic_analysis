@@ -1,4 +1,4 @@
-lab:
+Lab:
   L_min: 60
   L_max: 100
   a_min: -5
@@ -6,7 +6,7 @@ lab:
   b_min: 8
   b_max: 35
 
-rms_contrast:
+RMS:
   min: 15
   target: 22
   max: 30
@@ -21,7 +21,7 @@ sharpness:
   edge_density_min: 45
   eoe_min: 4
 
-color_entropy:
+ColorEntropy:
   min: 3
   threshold: 20
   max: 6
@@ -29,10 +29,12 @@ color_entropy:
 DCM:
   min: 0
 
-fourier_slope:
+FourierSlope:
   min: -3.0
   max: -2.0
 
 # Symmetry & balance may be reported in percent by the Toolbox; we accept either percent or 0..1
-symmetry_max: 0.05   # 5%
-balance_max: 0.20    # 20%
+Symmetry:
+  max: 0.05   # 5%
+Balance:
+  max: 0.20    # 20%

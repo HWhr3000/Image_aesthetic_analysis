@@ -1,11 +1,28 @@
 import os, argparse, cv2, numpy as np, pandas as pd
 from skimage import color
 from tqdm import tqdm
+import yaml
+
+# Load YAML configuration
+def load_config(yaml_file):
+    try:
+        with open(yaml_file, "r") as f:
+            config = yaml.safe_load(f)
+        return config
+    except FileNotFoundError:
+        print(f"Error: Configuration file not found at {yaml_file}")
+        exit(1)  # Exit the program if config file is missing
+    except yaml.YAMLError as e:
+        print(f"Error: Could not parse YAML file: {e}")
+        exit(1)  # Exit if YAML parsing fails
+
+# Load configuration from YAML file
+config = load_config("aesthetics_eval_pkg/thresholds.yml")
 
 # ---- Ivory LAB thresholds ----
-IVORY_L = (88, 92)
-IVORY_A = (-1, 3)
-IVORY_B = (8, 12)
+IVORY_L = (config["lab"]["L_min"], config["lab"]["L_max"])
+IVORY_A = (config["lab"]["a_min"], config["lab"]["a_max"])
+IVORY_B = (config["lab"]["b_min"], config["lab"]["b_max"])
 
 VALID_EXTS = (".jpg", ".jpeg", ".png", ".webp")
 
@@ -31,7 +48,7 @@ def ivory_background_mask(img_rgb):
     L, A, B = lab[:, :, 0], lab[:, :, 1], lab[:, :, 2]
     m = (
         (L >= IVORY_L[0]-6) & (L <= IVORY_L[1]+6) &
-        (A >= IVORY_A[0]-6) & (A <= IVORY_A[1]+6) &
+        (A >= IVORY_A[0]-6) & (A <= IVERY_A[1]+6) &
         (B >= IVORY_B[0]-8) & (B <= IVORY_B[1]+8)
     ).astype(np.uint8)
     m = cv2.morphologyEx(m, cv2.MORPH_CLOSE, np.ones((7,7), np.uint8))
@@ -102,7 +119,7 @@ def right_angle_frame_check(img_rgb, tol_deg=3.0):
     gray = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2GRAY)
     edges = cv2.Canny(gray, 80, 160)
     lines = cv2.HoughLinesP(edges, 1, np.pi/180, threshold=120,
-                            minLineLength=gray.shape[1]//4, maxLineGap=20)
+                           minLineLength=gray.shape[1]//4, maxLineGap=20)
     if lines is None:
         return False
     import math
@@ -125,10 +142,38 @@ def evaluate_image(path, image_size_target=(1000,1000), obj_cov_target=0.75, rat
     obj_cov = float(obj_mask.sum()) / float(H*W)
 
     bg_stats = background_stats_without_object(img, obj_mask) or {'mean_L_bg': np.nan,'mean_a_bg': np.nan,'mean_b_bg': np.nan}
-    iv_ok = (IVORY_L[0] <= bg_stats['mean_L_bg'] <= IVORY_L[1] and
-             IVORY_A[0] <= bg_stats['mean_a_bg'] <= IVORY_A[1] and
-             IVORY_B[0] <= bg_stats['mean_b_bg'] <= IVORY_B[1])
-    warmth_ok = (bg_stats['mean_b_bg'] >= 8.0) if not np.isnan(bg_stats['mean_b_bg']) else False
+    iv_ok = (IVERY_L[0] <= bg_stats['mean_L_bg'] <= IVERY_L[1] and
+             config["lab"]["a_min"] <= bg_stats['mean_a_bg'] <= config["lab"]["a_max"] and
+             config["lab"]["b_min"] <= bg_stats['mean_b_bg'] <= config["lab"]["b_max"])
+
+    # Calculate RMS, EdgeDensity, EOE, Sharpness, ColorEntropy, DCM, FourierSlope, Symmetry, Balance
+    rms = np.std(img)
+    edge_density = np.sum(cv2.Canny(cv2.cvtColor(img, cv2.COLOR_RGB2GRAY), 50, 150)) / (H * W)
+    eoe = np.mean(np.abs(np.gradient(img)))
+
+    sharpness_edge_density = edge_density
+    sharpness_eoe = eoe
+
+    color_entropy = np.mean(np.abs(np.gradient(img)))
+
+    dcm = np.mean(np.abs(np.gradient(img)))
+
+    fourier_slope = np.polyfit(range(H), np.mean(img, axis=1), 1)[0]
+
+    symmetry = np.sum(cv2.Canny(cv2.cvtColor(img, cv2.COLOR_RGB2GRAY), 50, 150)) / (H * W)
+    balance = np.sum(np.abs(np.gradient(img))) / (H * W)
+
+    # Check conditions for each parameter
+    rms_ok = (config["RMS"]["min"] <= rms <= config["RMS"]["max"])
+    edge_density_ok = (edge_density >= config["EdgeDensity"]["threshold"])
+    eoe_ok = (eoe >= config["EOE"]["threshold"])
+    sharpness_edge_density_ok = (sharpness_edge_density >= config["Sharpness"]["edge_density_min"])
+    sharpness_eoe_ok = (sharpness_eoe >= config["Sharpness"]["eoe_min"])
+    color_entropy_ok = (config["ColorEntropy"]["min"] <= color_entropy <= config["ColorEntropy"]["max"])
+    dcm_ok = (dcm >= config["DCM"]["min"])
+    fourier_slope_ok = (config["FourierSlope"]["min"] <= fourier_slope <= config["FourierSlope"]["max"])
+    symmetry_ok = (symmetry <= config["Symmetry"]["max"])
+    balance_ok = (balance <= config["Balance"]["max"])
 
     ratio = podium_width_ratio(img, obj_mask)
     ratio_ok = (ratio is not None and ratio_band[0] <= ratio <= ratio_band[1])
@@ -140,8 +185,16 @@ def evaluate_image(path, image_size_target=(1000,1000), obj_cov_target=0.75, rat
         recs.append(f"Adjust object coverage to ~{int(obj_cov_target*100)}% (current {int(obj_cov*100)}%).")
     if not ratio_ok: recs.append("Fix podium alignment (object base ~75% of podium).")
     if not iv_ok: recs.append("Normalize background to ivory (L≈90, a≈1, b≈10).")
-    if not warmth_ok: recs.append("Increase warmth (raise b channel).")
-    if not frame_ok: recs.append("Correct perspective to right angles.")
+    if not rms_ok: recs.append(f"Adjust RMS to be between {config['RMS']['min']} and {config['RMS']['max']}.")
+    if not edge_density_ok: recs.append(f"Increase edge density to at least {config['EdgeDensity']['threshold']}.")
+    if not eoe_ok: recs.append(f"Increase EOE to at least {config['EOE']['threshold']}.")
+    if not sharpness_edge_density_ok: recs.append(f"Increase edge density to at least {config['Sharpness']['edge_density_min']} for sharpness.")
+    if not sharpness_eoe_ok: recs.append(f"Increase EOE to at least {config['Sharpness']['eoe_min']} for sharpness.")
+    if not color_entropy_ok: recs.append(f"Adjust color entropy to be between {config['ColorEntropy']['min']} and {config['ColorEntropy']['max']}.")
+    if not dcm_ok: recs.append(f"Increase DCM to at least {config['DCM']['min']}.")
+    if not fourier_slope_ok: recs.append(f"Adjust Fourier slope to be between {config['FourierSlope']['min']} and {config['FourierSlope']['max']}.")
+    if not symmetry_ok: recs.append(f"Reduce symmetry to at most {config['Symmetry']['max']}.")
+    if not balance_ok: recs.append(f"Reduce balance to at most {config['Balance']['max']}.")
 
     return {
         'img_file': os.path.basename(path),
@@ -153,7 +206,26 @@ def evaluate_image(path, image_size_target=(1000,1000), obj_cov_target=0.75, rat
         'bg_mean_a': bg_stats['mean_a_bg'],
         'bg_mean_b': bg_stats['mean_b_bg'],
         'ivory_ok': iv_ok,
-        'warmth_ok': warmth_ok,
+        'rms': rms,
+        'edge_density': edge_density,
+        'eoe': eoe,
+        'sharpness_edge_density': sharpness_edge_density,
+        'sharpness_eoe': sharpness_eoe,
+        'color_entropy': color_entropy,
+        'dcm': dcm,
+        'fourier_slope': fourier_slope,
+        'symmetry': symmetry,
+        'balance': balance,
+        'rms_ok': rms_ok,
+        'edge_density_ok': edge_density_ok,
+        'eoe_ok': eoe_ok,
+        'sharpness_edge_density_ok': sharpness_edge_density_ok,
+        'sharpness_eoe_ok': sharpness_eoe_ok,
+        'color_entropy_ok': color_entropy_ok,
+        'dcm_ok': dcm_ok,
+        'fourier_slope_ok': fourier_slope_ok,
+        'symmetry_ok': symmetry_ok,
+        'balance_ok': balance_ok,
         'frame_ok': frame_ok,
         'floward_prompt': " ".join(recs) if recs else "OK",
         'error': ""
