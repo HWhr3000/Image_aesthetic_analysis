@@ -11,28 +11,29 @@ rms_contrast:
   target: 22
   max: 30
 
-EdgeDensity:
-  threshold: 500
-
-EOE:
-  threshold: 150
-
+# Sharpness and edge quality thresholds used by postprocess
 sharpness:
-  edge_density_min: 45
+  edge_density_min: 500
   eoe_min: 4
 
 color_entropy:
   min: 3
-  threshold: 20
   max: 6
-
-DCM:
-  min: 0
 
 fourier_slope:
   min: -3.0
   max: -2.0
 
-# Symmetry & balance may be reported in percent by the Toolbox; we accept either percent or 0..1
+# Symmetry & balance reported in percent by the Toolbox; accept either percent or 0..1
 symmetry_max: 0.05   # 5%
 balance_max: 0.20    # 20%
+
+# Floward-specific convenience settings (used by floward_eval)
+dims_target:
+  width: 1000
+  height: 1000
+
+coverage_target: 0.75
+ratio_band:
+  min: 0.6
+  max: 0.9
